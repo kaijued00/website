@@ -1,0 +1,478 @@
+import React, { useState } from 'react';
+import { 
+  Search, MapPin, Building2, Bed, Bath, Maximize, 
+  ChevronDown, Menu, User, PlusCircle, Heart, 
+  ArrowRight, ShieldCheck, Star, Map
+} from 'lucide-react';
+
+// --- Mock Data ---
+const PROPERTIES = [
+  {
+    id: 1,
+    title: "The River Condo Luxury Suite",
+    location: "Charoen Nakhon, Khlong San",
+    price: "15,500,000",
+    rentPrice: "65,000",
+    beds: 2,
+    baths: 2,
+    sqm: 85,
+    type: "Condo",
+    tags: ["Featured", "River View"],
+    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: 2,
+    title: "Ashton Asoke Modern Loft",
+    location: "Asoke, Watthana",
+    price: "9,200,000",
+    rentPrice: "35,000",
+    beds: 1,
+    baths: 1,
+    sqm: 45,
+    type: "Condo",
+    tags: ["Near BTS", "New"],
+    image: "https://images.unsplash.com/photo-1502672260266-1c1de2422030?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: 3,
+    title: "Grand Bangkok Boulevard House",
+    location: "Rama 9, Krungthep Kreetha",
+    price: "35,000,000",
+    rentPrice: "150,000",
+    beds: 4,
+    baths: 5,
+    sqm: 320,
+    type: "House",
+    tags: ["Luxury", "Private Pool"],
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: 4,
+    title: "Rhythm Sukhumvit 42",
+    location: "Ekkamai, Khlong Toei",
+    price: "6,800,000",
+    rentPrice: "28,000",
+    beds: 1,
+    baths: 1,
+    sqm: 35,
+    type: "Condo",
+    tags: ["Hot Deal"],
+    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: 5,
+    title: "Sindhorn Residence",
+    location: "Pathum Wan, Lumphini",
+    price: "28,900,000",
+    rentPrice: "120,000",
+    beds: 3,
+    baths: 3,
+    sqm: 140,
+    type: "Condo",
+    tags: ["Pet Friendly", "Park View"],
+    image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: 6,
+    title: "Pattanakarn Townhome",
+    location: "Pattanakarn, Suan Luang",
+    price: "5,500,000",
+    rentPrice: "22,000",
+    beds: 3,
+    baths: 3,
+    sqm: 150,
+    type: "Townhome",
+    tags: ["Family"],
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: 7,
+    title: "Life Ladprao Studio",
+    location: "Ladprao, Chatuchak",
+    price: "3,900,000",
+    rentPrice: "15,000",
+    beds: 1,
+    baths: 1,
+    sqm: 28,
+    type: "Condo",
+    tags: ["Investment", "Near MRT"],
+    image: "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: 8,
+    title: "Magnolias Ratchadamri",
+    location: "Ratchadamri, Pathum Wan",
+    price: "22,000,000",
+    rentPrice: "90,000",
+    beds: 2,
+    baths: 2,
+    sqm: 95,
+    type: "Condo",
+    tags: ["Ultra Luxury"],
+    image: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=80"
+  }
+];
+
+const CATEGORIES = [
+  { name: "Condo near BTS", icon: <Map className="w-6 h-6" /> },
+  { name: "Pet Friendly", icon: <Heart className="w-6 h-6" /> },
+  { name: "New Projects", icon: <Building2 className="w-6 h-6" /> },
+  { name: "Luxury Houses", icon: <Star className="w-6 h-6" /> },
+  { name: "Urgent Sale", icon: <ShieldCheck className="w-6 h-6" /> },
+];
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('buy');
+
+  return (
+    <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
+      
+      {/* --- Header / Navigation --- */}
+      <header className="bg-white shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            {/* Logo */}
+            <div className="flex-shrink-0 flex items-center cursor-pointer">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-2">
+                <Building2 className="text-white w-6 h-6" />
+              </div>
+              <span className="font-bold text-2xl text-gray-900 tracking-tight">Property<span className="text-blue-600">Finder</span></span>
+            </div>
+
+            {/* Desktop Nav */}
+            <nav className="hidden md:flex space-x-8">
+              <a href="#" className="text-blue-600 font-semibold border-b-2 border-blue-600 pb-1">Home</a>
+              <a href="#" className="text-gray-600 hover:text-blue-600 font-medium transition">Buy</a>
+              <a href="#" className="text-gray-600 hover:text-blue-600 font-medium transition">Rent</a>
+              <a href="#" className="text-gray-600 hover:text-blue-600 font-medium transition">New Projects</a>
+              <a href="#" className="text-gray-600 hover:text-blue-600 font-medium transition">Agents</a>
+            </nav>
+
+            {/* Right Actions */}
+            <div className="hidden md:flex items-center space-x-4">
+              <button className="text-gray-500 hover:text-blue-600 font-medium flex items-center">
+                <User className="w-5 h-5 mr-1" />
+                Login
+              </button>
+              <button className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-md font-medium transition flex items-center shadow-md">
+                <PlusCircle className="w-5 h-5 mr-2" />
+                Post Property
+              </button>
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden flex items-center">
+              <button className="text-gray-600 hover:text-gray-900">
+                <Menu className="h-8 w-8" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* --- Hero Section & Search --- */}
+      <section className="relative">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1920&q=80" 
+            alt="Cityscape" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-gray-900/60"></div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
+              Find Your Perfect Home
+            </h1>
+            <p className="text-xl text-blue-100 mb-10">
+              Discover thousands of properties for sale and rent across the country.
+            </p>
+
+            {/* Search Box */}
+            <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6">
+              {/* Search Tabs */}
+              <div className="flex space-x-4 mb-6 border-b border-gray-200">
+                <button 
+                  onClick={() => setActiveTab('buy')}
+                  className={`pb-3 px-2 font-semibold text-lg transition-colors relative ${activeTab === 'buy' ? 'text-blue-600' : 'text-gray-500 hover:text-gray-800'}`}
+                >
+                  Buy
+                  {activeTab === 'buy' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600"></div>}
+                </button>
+                <button 
+                  onClick={() => setActiveTab('rent')}
+                  className={`pb-3 px-2 font-semibold text-lg transition-colors relative ${activeTab === 'rent' ? 'text-blue-600' : 'text-gray-500 hover:text-gray-800'}`}
+                >
+                  Rent
+                  {activeTab === 'rent' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600"></div>}
+                </button>
+                <button className="pb-3 px-2 font-semibold text-lg text-gray-500 hover:text-gray-800 transition-colors">
+                  New Projects
+                </button>
+              </div>
+
+              {/* Search Inputs */}
+              <div className="flex flex-col md:flex-row gap-3">
+                <div className="relative flex-grow">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Search className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input 
+                    type="text" 
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500" 
+                    placeholder="Search location, BTS/MRT, project name..."
+                  />
+                </div>
+                
+                <div className="relative md:w-48 flex-shrink-0">
+                  <select className="block w-full pl-3 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 appearance-none bg-white">
+                    <option>Property Type</option>
+                    <option>Condo</option>
+                    <option>House</option>
+                    <option>Townhome</option>
+                    <option>Land</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <ChevronDown className="h-5 w-5 text-gray-400" />
+                  </div>
+                </div>
+
+                <div className="relative md:w-48 flex-shrink-0">
+                  <select className="block w-full pl-3 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 appearance-none bg-white">
+                    <option>Price Range</option>
+                    <option>Under 3M</option>
+                    <option>3M - 5M</option>
+                    <option>5M - 10M</option>
+                    <option>10M+</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <ChevronDown className="h-5 w-5 text-gray-400" />
+                  </div>
+                </div>
+
+                <button className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors flex-shrink-0 flex items-center justify-center">
+                  Search
+                </button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </section>
+
+      {/* --- Quick Categories --- */}
+      <section className="py-12 bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+            {CATEGORIES.map((cat, idx) => (
+              <div key={idx} className="flex flex-col items-center justify-center p-4 min-w-[120px] bg-gray-50 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition-all cursor-pointer border border-gray-100 hover:border-blue-200 hover:shadow-sm group">
+                <div className="bg-white p-3 rounded-full shadow-sm mb-3 text-gray-500 group-hover:text-blue-600 group-hover:scale-110 transition-transform">
+                  {cat.icon}
+                </div>
+                <span className="font-medium text-sm text-center">{cat.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- Recommended Properties --- */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-end mb-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Recommended for You</h2>
+              <p className="text-gray-500">Hand-picked properties tailored to your preferences</p>
+            </div>
+            <a href="#" className="hidden sm:flex items-center text-blue-600 font-semibold hover:text-blue-800 transition">
+              View All <ArrowRight className="ml-1 w-4 h-4" />
+            </a>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {PROPERTIES.map((property) => (
+              <div key={property.id} className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col group cursor-pointer">
+                
+                {/* Image Container */}
+                <div className="relative h-56 overflow-hidden">
+                  <img 
+                    src={property.image} 
+                    alt={property.title} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  {/* Badges */}
+                  <div className="absolute top-3 left-3 flex flex-col gap-2">
+                    {property.tags.map((tag, idx) => (
+                      <span key={idx} className={`text-xs font-bold px-2.5 py-1 rounded-md shadow-sm ${
+                        tag === 'Featured' ? 'bg-orange-500 text-white' : 
+                        tag === 'Hot Deal' ? 'bg-red-500 text-white' : 
+                        'bg-blue-600 text-white'
+                      }`}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  {/* Favorite Button */}
+                  <button className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full text-gray-500 hover:text-red-500 hover:bg-white transition-colors">
+                    <Heart className="w-5 h-5" />
+                  </button>
+                  {/* Property Type Badge */}
+                  <div className="absolute bottom-3 left-3 bg-gray-900/70 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded">
+                    {property.type}
+                  </div>
+                </div>
+
+                {/* Content Container */}
+                <div className="p-5 flex flex-col flex-grow">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-bold text-gray-900 text-lg leading-tight line-clamp-1 group-hover:text-blue-600 transition-colors">
+                      {property.title}
+                    </h3>
+                  </div>
+                  
+                  <div className="flex items-center text-gray-500 text-sm mb-4">
+                    <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
+                    <span className="truncate">{property.location}</span>
+                  </div>
+
+                  {/* Details Grid */}
+                  <div className="grid grid-cols-3 gap-2 py-3 border-y border-gray-100 mb-4">
+                    <div className="flex flex-col items-center justify-center text-gray-600">
+                      <Bed className="w-5 h-5 mb-1 text-gray-400" />
+                      <span className="text-xs font-medium">{property.beds} Bed</span>
+                    </div>
+                    <div className="flex flex-col items-center justify-center text-gray-600 border-x border-gray-100">
+                      <Bath className="w-5 h-5 mb-1 text-gray-400" />
+                      <span className="text-xs font-medium">{property.baths} Bath</span>
+                    </div>
+                    <div className="flex flex-col items-center justify-center text-gray-600">
+                      <Maximize className="w-5 h-5 mb-1 text-gray-400" />
+                      <span className="text-xs font-medium">{property.sqm} m&sup2;</span>
+                    </div>
+                  </div>
+
+                  {/* Pricing */}
+                  <div className="mt-auto">
+                    <div className="flex justify-between items-end">
+                      <div>
+                        <p className="text-xs text-gray-500 font-medium mb-0.5">Selling Price</p>
+                        <p className="text-blue-600 font-bold text-lg">฿ {property.price}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-gray-500 font-medium mb-0.5">Rent / Month</p>
+                        <p className="text-gray-900 font-bold">฿ {property.rentPrice}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 sm:hidden flex justify-center">
+             <button className="bg-white border border-blue-600 text-blue-600 px-6 py-2.5 rounded-lg font-semibold w-full">
+               View All Properties
+             </button>
+          </div>
+        </div>
+      </section>
+
+      {/* --- Call To Action Section --- */}
+      <section className="bg-blue-600 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="mb-8 md:mb-0 md:max-w-xl">
+              <h2 className="text-3xl font-bold text-white mb-4">Are you an owner or agent?</h2>
+              <p className="text-blue-100 text-lg">
+                List your property on PropertyFinder today and reach thousands of potential buyers and tenants everyday.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+              <button className="bg-white text-blue-600 font-bold px-8 py-3.5 rounded-lg shadow-lg hover:bg-gray-50 transition w-full sm:w-auto text-center">
+                Create Account
+              </button>
+              <button className="bg-orange-500 text-white font-bold px-8 py-3.5 rounded-lg shadow-lg hover:bg-orange-600 transition w-full sm:w-auto text-center flex items-center justify-center">
+                <PlusCircle className="w-5 h-5 mr-2" />
+                Post Property Free
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- Footer --- */}
+      <footer className="bg-gray-900 text-gray-300 py-12 lg:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+            
+            {/* Brand Col */}
+            <div>
+              <div className="flex items-center mb-6">
+                <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center mr-2">
+                  <Building2 className="text-white w-5 h-5" />
+                </div>
+                <span className="font-bold text-xl text-white tracking-tight">Property<span className="text-blue-500">Finder</span></span>
+              </div>
+              <p className="text-sm text-gray-400 mb-6">
+                The most trusted real estate platform. We connect buyers, sellers, and tenants with the best properties in the market.
+              </p>
+            </div>
+
+            {/* Links Col 1 */}
+            <div>
+              <h4 className="text-white font-bold mb-5">Quick Links</h4>
+              <ul className="space-y-3 text-sm">
+                <li><a href="#" className="hover:text-blue-400 transition">Buy Property</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition">Rent Property</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition">New Projects</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition">Find Agents</a></li>
+              </ul>
+            </div>
+
+            {/* Links Col 2 */}
+            <div>
+              <h4 className="text-white font-bold mb-5">About Us</h4>
+              <ul className="space-y-3 text-sm">
+                <li><a href="#" className="hover:text-blue-400 transition">Our Company</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition">Careers</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition">Contact Us</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition">Terms & Privacy</a></li>
+              </ul>
+            </div>
+
+            {/* Contact Col */}
+            <div>
+              <h4 className="text-white font-bold mb-5">Contact Support</h4>
+              <ul className="space-y-3 text-sm">
+                <li className="flex items-start">
+                  <MapPin className="w-5 h-5 mr-3 text-gray-500 flex-shrink-0" />
+                  <span>123 Business Tower, Sukhumvit Road, Bangkok 10110</span>
+                </li>
+                <li className="flex items-center mt-4">
+                  <div className="bg-gray-800 p-2 rounded-lg text-white font-bold tracking-wider mr-3">
+                    02-123-4567
+                  </div>
+                </li>
+                <li className="text-gray-500 mt-2">Mon-Fri 9:00 AM - 6:00 PM</li>
+              </ul>
+            </div>
+
+          </div>
+          
+          <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+            <p>&copy; 2026 PropertyFinder. All rights reserved.</p>
+            <div className="mt-4 md:mt-0 space-x-6">
+              <a href="#" className="hover:text-white transition">Facebook</a>
+              <a href="#" className="hover:text-white transition">Instagram</a>
+              <a href="#" className="hover:text-white transition">YouTube</a>
+              <a href="#" className="hover:text-white transition">Line</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  );
+}
